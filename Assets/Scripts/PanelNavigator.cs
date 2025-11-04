@@ -2,54 +2,45 @@ using UnityEngine;
 
 public class PanelNavigator : MonoBehaviour
 {
-    [Header("List all your UI panels here in order")]
+    [Header("UI Panels in this scene")]
     [SerializeField] private GameObject[] panels;
 
-    private int currentPanel = 0;
+    private int currentPanelIndex = 0;
 
     private void Start()
     {
-        DisplayPanel(currentPanel);
+        ShowPanel(currentPanelIndex);
     }
 
-    public void GoToNext()
+    public void ShowNext()
     {
-        ChangePanel(1);
+        currentPanelIndex = (currentPanelIndex + 1) % panels.Length;
+        ShowPanel(currentPanelIndex);
     }
 
-    public void GoToPrevious()
+    public void ShowPrevious()
     {
-        ChangePanel(-1);
+        currentPanelIndex--;
+        if (currentPanelIndex < 0)
+            currentPanelIndex = panels.Length - 1;
+
+        ShowPanel(currentPanelIndex);
     }
 
-    private void ChangePanel(int step)
-    {
-        if (panels == null || panels.Length == 0)
-        {
-            Debug.LogWarning("PanelNavigator: No panels assigned!");
-            return;
-        }
-
-        // Hide the current panel
-        panels[currentPanel].SetActive(false);
-
-        // Move index forward or backward, loop around when necessary
-        currentPanel += step;
-
-        if (currentPanel >= panels.Length)
-            currentPanel = 0;
-        else if (currentPanel < 0)
-            currentPanel = panels.Length - 1;
-
-        // Show the new panel
-        panels[currentPanel].SetActive(true);
-    }
-
-    private void DisplayPanel(int index)
+    private void ShowPanel(int index)
     {
         for (int i = 0; i < panels.Length; i++)
         {
             panels[i].SetActive(i == index);
+        }
+    }
+
+    public void ShowPanelByIndex(int index)
+    {
+        if (index >= 0 && index < panels.Length)
+        {
+            currentPanelIndex = index;
+            ShowPanel(currentPanelIndex);
         }
     }
 }

@@ -1,20 +1,21 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PlayButtonController : MonoBehaviour
 {
-    [Header("Scene To Load")]
-    [SerializeField] private string sceneToLoad = "Start";
+    [Header("Scene to load when Play is pressed")]
+    [Tooltip("Make sure this scene is added to Build Settings!")]
+    [SerializeField] private int gameSceneBuildIndex = 1; // Default index (0 = first scene)
 
-    // Called when the Play button is clicked
-    public void HandlePlayButton()
+    public void OnPlayPressed()
     {
-        if (string.IsNullOrEmpty(sceneToLoad))
+        if (gameSceneBuildIndex >= 0 && gameSceneBuildIndex < SceneManager.sceneCountInBuildSettings)
         {
-            Debug.LogWarning("No scene name has been assigned in the Inspector!");
-            return;
+            SceneManager.LoadScene(gameSceneBuildIndex);
         }
-
-        SceneManager.LoadScene(sceneToLoad);
+        else
+        {
+            Debug.LogError($"Scene at build index {gameSceneBuildIndex} is not in Build Settings!");
+        }
     }
 }
